@@ -1,0 +1,22 @@
+{% for todo in todos %}
+<div>
+    <input type="text"
+           name="text"
+           value="{{ todo.text }}"
+           hx-post="/todos/{{ todo.id }}/update"
+           hx-trigger="change"
+           hx-swap="none">
+
+    <button hx-post="/todos/{{ todo.id }}/move/up"
+            hx-target="#todos-list"
+            hx-swap="innerHTML">↑</button>
+
+    <button hx-post="/todos/{{ todo.id }}/move/down"
+            hx-target="#todos-list"
+            hx-swap="innerHTML">↓</button>
+
+    <button hx-delete="/todos/{{ todo.id }}/remove"
+            hx-target="#todos-list"
+            hx-swap="innerHTML">Remove</button>
+</div>
+{% endfor %}

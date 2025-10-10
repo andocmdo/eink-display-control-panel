@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta charset="utf-8">
+
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        font-family: Verdana, sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .page {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 90%;
+        max-width: 800px;
+        padding: 1rem;
+      }
+
+      .left, .right {
+        flex: 1;
+      }
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-right: 1rem;
+      }
+
+      .day {
+        font-size: 2.3rem;   /* was 2rem */
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .date {
+        font-size: 1.4rem;   /* was 1.2rem */
+      }
+
+      .right {
+        border-left: 1px solid #000;
+        padding-left: 1rem;
+      }
+
+      .todo-title {
+        font-size: 1.7rem;   /* was 1.5rem */
+        margin-bottom: 0.5rem;
+      }
+
+      ul {
+        list-style-type: disc;
+        margin-left: 1.2rem;
+      }
+
+      li {
+        font-size: 1.15rem;  /* was 1rem */
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page">
+      <div class="left">
+        <div class="day">Tuesday</div>
+        <div class="date">October 3, 2025</div>
+      </div>
+
+      <div class="right">
+        <div class="todo-title">To-Do</div>
+        <ul>
+          <li>Check server logs</li>
+          <li>Refill coffee beans</li>
+          <li>Send project update</li>
+          <li>Read 10 pages of book</li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
