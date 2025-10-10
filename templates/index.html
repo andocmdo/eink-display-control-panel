@@ -15,7 +15,7 @@
         {% for i in range(3) %}
         <div>
             <label>Location {{ i + 1 }}:</label>
-            <input type="text" name="weather_{{ i }}" value="{{ data['weather_locations'][i] }}">
+            <input type="text" name="weather_{{ i }}" value="{% if i < data.get('weather', [])|length %}{{ data['weather'][i]['location'] }}{% endif %}">
         </div>
         {% endfor %}
 
@@ -24,7 +24,7 @@
         {% for i in range(10) %}
         <div>
             <label>Ticker {{ i + 1 }}:</label>
-            <input type="text" name="stock_{{ i }}" value="{{ data['stock_tickers'][i] }}">
+            <input type="text" name="stock_{{ i }}" value="{% if i < data.get('stocks', [])|length %}{{ data['stocks'][i]['ticker'] }}{% endif %}">
         </div>
         {% endfor %}
 

@@ -116,10 +116,8 @@
 
         <div class="weather-section">
           <div class="weather-title">Weather</div>
-          {% for location in weather_locations %}
-            {% if location.strip() %}
-              <div class="weather-location">{{ location }}</div>
-            {% endif %}
+          {% for w in weather %}
+            <div class="weather-location">{{ w.location }}{% if w.temperature %}: {{ w.temperature }}°F{% endif %}</div>
           {% endfor %}
         </div>
       </div>
@@ -139,7 +137,7 @@
       <div class="stocks-section">
         <div class="stocks-title">Stocks</div>
           {% for stock in stocks %}
-            <div class="stock-item">{{ stock.ticker }}: ${{ stock.price }}</div>
+            <div class="stock-item">{{ stock.ticker }}{% if stock.price %}: ${{ stock.price }}{% endif %}</div>
           {% endfor %}
         </div>
       </div>

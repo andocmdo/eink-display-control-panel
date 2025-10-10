@@ -15,9 +15,9 @@ def load_data():
             return json.load(f)
     else:
         return {
-            'weather_locations': ['', '', ''],
+            'weather': [],
             'todos': [],
-            'stock_tickers': [''] * 10
+            'stocks': []
         }
 
 def save_data(data):
@@ -28,19 +28,36 @@ def save_data(data):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Collect weather locations
-        weather_locations = [
-            request.form.get(f'weather_{i}', '') for i in range(3)
-        ]
-
-        # Collect stock tickers
-        stock_tickers = [
-            request.form.get(f'stock_{i}', '') for i in range(10)
-        ]
-
         data = load_data()
-        data['weather_locations'] = weather_locations
-        data['stock_tickers'] = stock_tickers
+
+        # Collect weather data - preserve existing temperatures
+        weather = []
+        for i in range(3):
+            location = request.form.get(f'weather_{i}', '').strip()
+            if location:
+                # Find existing temperature if this location was already saved
+                existing_temp = ''
+                for w in data.get('weather', []):
+                    if w['location'] == location:
+                        existing_temp = w.get('temperature', '')
+                        break
+                weather.append({'location': location, 'temperature': existing_temp})
+
+        # Collect stock data - preserve existing prices
+        stocks = []
+        for i in range(10):
+            ticker = request.form.get(f'stock_{i}', '').strip()
+            if ticker:
+                # Find existing price if this ticker was already saved
+                existing_price = ''
+                for s in data.get('stocks', []):
+                    if s['ticker'] == ticker:
+                        existing_price = s.get('price', '')
+                        break
+                stocks.append({'ticker': ticker, 'price': existing_price})
+
+        data['weather'] = weather
+        data['stocks'] = stocks
         save_data(data)
 
         return redirect(url_for('index'))
@@ -116,21 +133,12 @@ def preview():
     day_name = now.strftime('%A')
     date_str = now.strftime('%B %d, %Y')
 
-    # Prepare stock data with example prices
-    stocks = []
-    for ticker in data['stock_tickers']:
-        if ticker.strip():
-            stocks.append({
-                'ticker': ticker,
-                'price': '123.45'  # Example price, will be replaced by actual script later
-            })
-
     return render_template('preview.html',
                          day=day_name,
                          date=date_str,
-                         weather_locations=data['weather_locations'],
-                         todos=data['todos'],
-                         stocks=stocks)
+                         weather=data.get('weather', []),
+                         todos=data.get('todos', []),
+                         stocks=data.get('stocks', []))
 
 if __name__ == '__main__':
     app.run(debug=True)
