@@ -91,7 +91,8 @@
       }
 
       .todo-title {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
+        font-weight: bold;
         margin-bottom: 0.5rem;
       }
 
@@ -121,25 +122,28 @@
             {% endif %}
           {% endfor %}
         </div>
+      </div>
 
-        <div class="stocks-section">
-          <div class="stocks-title">Stocks</div>
+      <div class="right">
+        <div class="todo-section">
+        <div class="todo-title">To-Do</div>
+          <ul>
+            {% for todo in todos %}
+              {% if todo.text.strip() %}
+                <li>{{ todo.text }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+      <div class="stocks-section">
+        <div class="stocks-title">Stocks</div>
           {% for stock in stocks %}
             <div class="stock-item">{{ stock.ticker }}: ${{ stock.price }}</div>
           {% endfor %}
         </div>
       </div>
 
-      <div class="right">
-        <div class="todo-title">To-Do</div>
-        <ul>
-          {% for todo in todos %}
-            {% if todo.text.strip() %}
-              <li>{{ todo.text }}</li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
     </main>
   </body>
 </html>
