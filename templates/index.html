@@ -9,6 +9,29 @@
 
     <p><a href="/preview" target="_blank"><button type="button">Preview Display</button></a></p>
 
+    <hr>
+
+    <h2>Update Actions</h2>
+    <div id="update-status" style="margin: 10px 0; padding: 10px; display: none;"></div>
+    <p>
+        <button hx-get="/update/weather"
+                hx-target="#update-status"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('update-status').style.display='block'">Update Weather</button>
+
+        <button hx-get="/update/stocks"
+                hx-target="#update-status"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('update-status').style.display='block'">Update Stocks</button>
+
+        <button hx-get="/update/display"
+                hx-target="#update-status"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('update-status').style.display='block'">Push to Display</button>
+    </p>
+
+    <hr>
+
     <form method="POST">
         <h2>Weather Locations</h2>
         <p>Enter up to 3 locations (zip code or city, state):</p>
