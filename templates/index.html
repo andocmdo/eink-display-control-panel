@@ -35,6 +35,16 @@
 
     <hr>
 
+    <h2>Todo Items</h2>
+    <div id="todos-list">
+        {% with todos=data['todos'] %}
+            {% include 'todos_list.html' %}
+        {% endwith %}
+    </div>
+    <button hx-post="/todos/add"
+            hx-target="#todos-list"
+            hx-swap="innerHTML">Add Todo</button>
+
     <form method="POST">
         <h2>Weather Locations</h2>
         <p>Enter up to 3 locations (zip code or city, state):</p>
@@ -60,14 +70,5 @@
 
     <hr>
 
-    <h2>Todo Items</h2>
-    <div id="todos-list">
-        {% with todos=data['todos'] %}
-            {% include 'todos_list.html' %}
-        {% endwith %}
-    </div>
-    <button hx-post="/todos/add"
-            hx-target="#todos-list"
-            hx-swap="innerHTML">Add Todo</button>
 </body>
 </html>

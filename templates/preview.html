@@ -105,6 +105,14 @@
         font-size: 1.15rem;
         margin-bottom: 0.5rem;
       }
+
+      .last-updated {
+	position: absolute;
+        bottom: 4px;   /* distance from bottom edge */
+        left: 6px;     /* distance from left edge */
+        font-size: 0.75rem;
+        color: #444;
+      }
     </style>
   </head>
 
@@ -143,5 +151,9 @@
       </div>
 
     </main>
+
+    <div class="last-updated">
+	{{ date }}
+    </div>
   </body>
 </html>
