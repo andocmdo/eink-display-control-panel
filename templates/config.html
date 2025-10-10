@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E-Ink Display Configuration</title>
+</head>
+<body>
+    <h1>E-Ink Display Configuration</h1>
+
+    <p><a href="/"><button type="button">Back to Main Page</button></a></p>
+
+    <form method="POST">
+        <h2>E-Ink Server Settings</h2>
+
+        <div>
+            <label>Base URL:</label><br>
+            <input type="text" name="eink_base_url" value="{{ config.get('eink_base_url', '') }}" size="50" placeholder="https://your-eink-server.com">
+        </div>
+        <br>
+
+        <div>
+            <label>Username:</label><br>
+            <input type="text" name="eink_username" value="{{ config.get('eink_username', '') }}" size="50">
+        </div>
+        <br>
+
+        <div>
+            <label>Password:</label><br>
+            <input type="password" name="eink_password" value="{{ config.get('eink_password', '') }}" size="50">
+        </div>
+        <br>
+
+        <div>
+            <label>Screen ID:</label><br>
+            <input type="text" name="eink_screen_id" value="{{ config.get('eink_screen_id', '') }}" size="50">
+        </div>
+        <br>
+
+        <button type="submit">Save Configuration</button>
+    </form>
+
+    <hr>
+
+    <h3>Configuration Status</h3>
+    <p>
+        {% if config.get('eink_base_url') and config.get('eink_username') and config.get('eink_password') and config.get('eink_screen_id') %}
+            <strong style="color: green;">✓ Configuration complete</strong>
+        {% else %}
+            <strong style="color: orange;">⚠ Configuration incomplete</strong>
+        {% endif %}
+    </p>
+</body>
+</html>

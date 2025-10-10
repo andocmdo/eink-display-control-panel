@@ -9,12 +9,7 @@ import requests
 app = Flask(__name__)
 
 DATA_FILE = 'data.json'
-
-# E-ink server configuration - load from environment variables
-EINK_BASE_URL = os.getenv('EINK_BASE_URL', '')
-EINK_USERNAME = os.getenv('EINK_USERNAME', '')
-EINK_PASSWORD = os.getenv('EINK_PASSWORD', '')
-EINK_SCREEN_ID = os.getenv('EINK_SCREEN_ID', '')
+CONFIG_FILE = 'config.json'
 
 def load_data():
     """Load data from JSON file, return default structure if file doesn't exist"""
@@ -32,6 +27,24 @@ def save_data(data):
     """Save data to JSON file"""
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
+
+def load_config():
+    """Load configuration from JSON file"""
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as f:
+            return json.load(f)
+    else:
+        return {
+            'eink_base_url': '',
+            'eink_username': '',
+            'eink_password': '',
+            'eink_screen_id': ''
+        }
+
+def save_config(config):
+    """Save configuration to JSON file"""
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(config, f, indent=2)
 
 def fetch_stock_prices(tickers):
     """Fetch stock prices from AlphaVantage API (placeholder with dummy data)
@@ -209,6 +222,23 @@ def preview():
                          todos=data.get('todos', []),
                          stocks=data.get('stocks', []))
 
+@app.route('/config', methods=['GET', 'POST'])
+def config():
+    """Configuration page for e-ink server settings"""
+    if request.method == 'POST':
+        config_data = {
+            'eink_base_url': request.form.get('eink_base_url', '').strip(),
+            'eink_username': request.form.get('eink_username', '').strip(),
+            'eink_password': request.form.get('eink_password', '').strip(),
+            'eink_screen_id': request.form.get('eink_screen_id', '').strip()
+        }
+        save_config(config_data)
+        return redirect(url_for('config'))
+
+    # GET request - load and display current config
+    config_data = load_config()
+    return render_template('config.html', config=config_data)
+
 # Update endpoints for cron jobs
 @app.route('/update/stocks', methods=['GET'])
 def update_stocks():
@@ -270,11 +300,17 @@ def update_weather():
 @app.route('/update/display', methods=['GET'])
 def update_display():
     """Render preview HTML and upload to e-ink display server"""
+    # Load config
+    config_data = load_config()
+
     # Check if e-ink server is configured
-    if not all([EINK_BASE_URL, EINK_USERNAME, EINK_PASSWORD, EINK_SCREEN_ID]):
+    if not all([config_data.get('eink_base_url'),
+                config_data.get('eink_username'),
+                config_data.get('eink_password'),
+                config_data.get('eink_screen_id')]):
         return jsonify({
             'status': 'error',
-            'message': 'E-ink server not configured. Set EINK_BASE_URL, EINK_USERNAME, EINK_PASSWORD, and EINK_SCREEN_ID environment variables.'
+            'message': 'E-ink server not configured. Please configure settings at /config'
         }), 500
 
     try:
@@ -295,15 +331,20 @@ def update_display():
                                      stocks=data.get('stocks', []))
 
         # Login to e-ink server
-        token = eink_login(EINK_BASE_URL, EINK_USERNAME, EINK_PASSWORD)
+        token = eink_login(config_data['eink_base_url'],
+                          config_data['eink_username'],
+                          config_data['eink_password'])
 
         # Update the screen
-        response = eink_update_screen(EINK_BASE_URL, token, EINK_SCREEN_ID, html_content)
+        response = eink_update_screen(config_data['eink_base_url'],
+                                     token,
+                                     config_data['eink_screen_id'],
+                                     html_content)
 
         return jsonify({
             'status': 'success',
-            'message': f'Display updated successfully for screen {EINK_SCREEN_ID}',
-            'screen_id': EINK_SCREEN_ID,
+            'message': f'Display updated successfully for screen {config_data["eink_screen_id"]}',
+            'screen_id': config_data['eink_screen_id'],
             'server_response': response
         })
 
