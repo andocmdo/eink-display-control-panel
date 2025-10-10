@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E-Ink Display Control Panel</title>
+</head>
+<body>
+    <h1>E-Ink Display Control Panel</h1>
+
+    <form method="POST">
+        <h2>Weather Locations</h2>
+        <p>Enter up to 3 locations (zip code or city, state):</p>
+        {% for i in range(3) %}
+        <div>
+            <label>Location {{ i + 1 }}:</label>
+            <input type="text" name="weather_{{ i }}" value="{{ data['weather_locations'][i] }}">
+        </div>
+        {% endfor %}
+
+        <h2>Todo Items</h2>
+        <p>Enter up to 10 todo items:</p>
+        {% for i in range(10) %}
+        <div>
+            <label>Todo {{ i + 1 }}:</label>
+            <input type="text" name="todo_{{ i }}" value="{{ data['todo_items'][i] }}">
+        </div>
+        {% endfor %}
+
+        <h2>Stock Tickers</h2>
+        <p>Enter up to 10 stock tickers:</p>
+        {% for i in range(10) %}
+        <div>
+            <label>Ticker {{ i + 1 }}:</label>
+            <input type="text" name="stock_{{ i }}" value="{{ data['stock_tickers'][i] }}">
+        </div>
+        {% endfor %}
+
+        <br>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
