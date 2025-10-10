@@ -214,13 +214,15 @@ def preview():
     now = datetime.now()
     day_name = now.strftime('%A')
     date_str = now.strftime('%B %d, %Y')
+    time_str = now.strftime('%I:%M %p')
 
     return render_template('preview.html',
-                         day=day_name,
-                         date=date_str,
-                         weather=data.get('weather', []),
-                         todos=data.get('todos', []),
-                         stocks=data.get('stocks', []))
+                           day=day_name,
+                           date=date_str,
+                           time=time_str,
+                           weather=data.get('weather', []),
+                           todos=data.get('todos', []),
+                           stocks=data.get('stocks', []))
 
 @app.route('/config', methods=['GET', 'POST'])
 def config():
@@ -321,11 +323,13 @@ def update_display():
         now = datetime.now()
         day_name = now.strftime('%A')
         date_str = now.strftime('%B %d, %Y')
+        time_str = now.strftime('%I:%M %p')
 
         # Render the preview template to HTML string
         html_content = render_template('preview.html',
                                      day=day_name,
                                      date=date_str,
+                                     time=time_str,
                                      weather=data.get('weather', []),
                                      todos=data.get('todos', []),
                                      stocks=data.get('stocks', []))
