@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import random
 import requests
 
@@ -211,7 +212,7 @@ def preview():
     data = load_data()
 
     # Get current date
-    now = datetime.now()
+    now = datetime.now(ZoneInfo("America/New_York"))
     day_name = now.strftime('%A')
     date_str = now.strftime('%B %d, %Y')
     time_str = now.strftime('%I:%M %p')
@@ -320,7 +321,7 @@ def update_display():
         data = load_data()
 
         # Get current date
-        now = datetime.now()
+        now = datetime.now(ZoneInfo("America/New_York"))
         day_name = now.strftime('%A')
         date_str = now.strftime('%B %d, %Y')
         time_str = now.strftime('%I:%M %p')
