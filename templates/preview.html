@@ -125,7 +125,7 @@
         <div class="weather-section">
           <div class="weather-title">Weather</div>
           {% for w in weather %}
-            <div class="weather-location">{{ w.location }}{% if w.temperature %}: {{ w.temperature }}°F{% endif %}</div>
+            <div class="weather-location">{{ w.city }}{% if w.temperature %}: {{ w.temperature }}°F{% endif %}</div>
           {% endfor %}
         </div>
       </div>

@@ -3,6 +3,15 @@
 <head>
     <title>E-Ink Display Control Panel</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        #loading-spinner {
+            display: none; /* Initially hidden */
+        }
+
+        #loading-spinner.htmx-request {
+            display: block; /* Show when request is active */
+        }
+    </style>
 </head>
 <body>
     <h1>E-Ink Display Control Panel</h1>
@@ -15,21 +24,27 @@
     <hr>
 
     <h2>Update Actions</h2>
+    <div id="loading-spinner">
+        Loading...
+    </div>
     <div id="update-status" style="margin: 10px 0; padding: 10px; display: none;"></div>
     <p>
         <button hx-get="/update/weather"
                 hx-target="#update-status"
                 hx-swap="innerHTML"
+                hx-indicator="#loading-spinner"
                 onclick="document.getElementById('update-status').style.display='block'">Update Weather</button>
 
         <button hx-get="/update/stocks"
                 hx-target="#update-status"
                 hx-swap="innerHTML"
+                hx-indicator="#loading-spinner"
                 onclick="document.getElementById('update-status').style.display='block'">Update Stocks</button>
 
         <button hx-get="/update/display"
                 hx-target="#update-status"
                 hx-swap="innerHTML"
+                hx-indicator="#loading-spinner"
                 onclick="document.getElementById('update-status').style.display='block'">Push to Display</button>
     </p>
 
@@ -47,11 +62,11 @@
 
     <form method="POST">
         <h2>Weather Locations</h2>
-        <p>Enter up to 3 locations (zip code or city, state):</p>
+        <p>Enter up to 3 locations (lat, lon):</p>
         {% for i in range(3) %}
         <div>
             <label>Location {{ i + 1 }}:</label>
-            <input type="text" name="weather_{{ i }}" value="{% if i < data.get('weather', [])|length %}{{ data['weather'][i]['location'] }}{% endif %}">
+            <input type="text" name="weather_{{ i }}" value="{% if i < data.get('weather', [])|length %}{{ data['weather'][i]['location'] }}{% endif %}"> <span>{{ data.get('weather', [{}])[i].get('city','') }}</span>
         </div>
         {% endfor %}
 

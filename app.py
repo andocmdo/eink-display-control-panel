@@ -6,6 +6,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import random
 import requests
+import time
+import random
 
 app = Flask(__name__)
 
@@ -39,7 +41,8 @@ def load_config():
             'eink_base_url': '',
             'eink_username': '',
             'eink_password': '',
-            'eink_screen_id': ''
+            'eink_screen_id': '',
+            'weather_api_base_url': ''
         }
 
 def save_config(config):
@@ -63,19 +66,30 @@ def fetch_stock_prices(tickers):
         prices[ticker] = str(round(random.uniform(50, 500), 2))
     return prices
 
-def fetch_weather_temperature(location):
+def fetch_weather_temperature(latlon):
     """Fetch temperature for location from weather API (placeholder with dummy data)
 
     Args:
-        location: Location string (zip code or city, state)
+        latlon: Location string (lat,long) Ex: "39.97633112947319,-83.03250888455779"
 
     Returns:
         Temperature as string
     """
-    # TODO: Implement actual weather API call
-    # For now, return dummy temperature
-    dummy_temp = random.randint(32, 95)
-    return str(dummy_temp)
+    # First call sends lat,lon and gets the url endpoint for that gridpoint
+    url = load_config()['weather_api_base_url'] + latlon.replace(" ", "")
+    resp = requests.get(url)
+    resp.raise_for_status()
+    data = resp.json()
+    data_url = data.get("properties", {}).get("forecast", "")
+    properties = data.get("properties", {}).get("relativeLocation", {}).get("properties", {})
+    city = properties.get("city", "NOT FOUND")
+    state = properties.get("state", "NOT FOUND")
+    #Next we use the provided gridpoint url and get the temp
+    resp2 = requests.get(data_url)
+    resp2.raise_for_status()
+    forecast = resp2.json()
+    temp = forecast.get("properties", {}).get("periods", [{}])[0].get("temperature")
+    return str(temp), city, state
 
 def eink_login(base_url, username, password):
     """Authenticate to e-ink server and return access token"""
@@ -233,7 +247,8 @@ def config():
             'eink_base_url': request.form.get('eink_base_url', '').strip(),
             'eink_username': request.form.get('eink_username', '').strip(),
             'eink_password': request.form.get('eink_password', '').strip(),
-            'eink_screen_id': request.form.get('eink_screen_id', '').strip()
+            'eink_screen_id': request.form.get('eink_screen_id', '').strip(),
+            'weather_api_base_url': request.form.get('weather_api_base_url', '').strip()
         }
         save_config(config_data)
         return redirect(url_for('config'))
@@ -287,8 +302,11 @@ def update_weather():
     updated_count = 0
     for location_data in weather:
         location = location_data['location']
-        temperature = fetch_weather_temperature(location)
+        time.sleep(random.uniform(0.1, 0.5))
+        temperature, city, state = fetch_weather_temperature(location)
         location_data['temperature'] = temperature
+        location_data['city'] = city 
+        location_data['state'] = state
         updated_count += 1
 
     save_data(data)

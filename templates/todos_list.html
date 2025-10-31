@@ -5,7 +5,8 @@
            value="{{ todo.text }}"
            hx-post="/todos/{{ todo.id }}/update"
            hx-trigger="change"
-           hx-swap="none">
+           hx-swap="none"
+           style="width: 400px;">
 
     <button hx-post="/todos/{{ todo.id }}/move/up"
             hx-target="#todos-list"
